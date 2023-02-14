@@ -6,9 +6,11 @@ FROM mcr.microsoft.com/dotnet/aspnet:$dotnetImageTag AS base
 #未來應持續關注 otel version，若有新版本應更新新版本
 FROM mcr.microsoft.com/dotnet/aspnet:7.0-bullseye-slim AS otel
 RUN apt-get update && apt-get install unzip -y
-ARG ARCHIVE=opentelemetry-dotnet-instrumentation-linux-glibc.zip
-ARG OTEL_VERSION=0.5.0
-ADD https://github.com/open-telemetry/opentelemetry-dotnet-instrumentation/releases/download/v$OTEL_VERSION/$ARCHIVE otel-dotnet-instrumentation.zip
+#ARG ARCHIVE=opentelemetry-dotnet-instrumentation-linux-glibc.zip
+#ARG OTEL_VERSION=0.5.0
+#ADD https://github.com/open-telemetry/opentelemetry-dotnet-instrumentation/releases/download/v$OTEL_VERSION/$ARCHIVE otel-dotnet-instrumentation.zip
+#從下載回來的備份來解壓縮，要更快的話可能要把成品直接解壓縮放著，或是不要用 zip 改用 linux 裡面原生就有的壓縮格式
+COPY OpenTelemetry.dotnet.AutoInstrumentation.Release/linux-glibc-0.5.0.zip otel-dotnet-instrumentation.zip
 RUN unzip -q otel-dotnet-instrumentation.zip -d /otel-dotnet-auto
 
 # Build Plugin

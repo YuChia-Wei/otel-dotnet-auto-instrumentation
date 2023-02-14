@@ -1,11 +1,10 @@
-﻿using System.Text.RegularExpressions;
-using OpenTelemetry.Instrumentation.AspNetCore;
+﻿using OpenTelemetry.Instrumentation.AspNetCore;
 using OpenTelemetry.Instrumentation.Http;
 using OpenTelemetry.Instrumentation.SqlClient;
 
 namespace OpenTelemetry.AutoInstrumentation.AspNetCore.Plugins;
 
-public partial class OptionsPlugin
+public class OptionsPlugin
 {
     /// <summary>
     /// should be rename to ConfigureTracesOptions when OpenTelemetry.DotNet.Instrumentation upgrade to ^0.5.1
@@ -15,7 +14,7 @@ public partial class OptionsPlugin
     {
         options.RecordException = true;
 
-        options.Filter = context => !HealthCheckUserAgentRegex().IsMatch(context.Request.Headers.UserAgent);
+        options.Filter = context => HttpRequestUserAgentChecker.IsValidUser(context.Request.Headers.UserAgent);
     }
 
     /// <summary>
@@ -42,7 +41,4 @@ public partial class OptionsPlugin
     {
         // My custom logic here
     }
-
-    [GeneratedRegex("^a10hm/\\d+.\\d+|^kube-probe/\\d+.\\d+")]
-    private static partial Regex HealthCheckUserAgentRegex();
 }
