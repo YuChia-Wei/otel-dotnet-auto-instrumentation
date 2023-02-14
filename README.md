@@ -32,7 +32,7 @@ OTEL_DOTNET_AUTO_HOME: /otel-dotnet-auto
 OTEL_DOTNET_AUTO_INTEGRATIONS_FILE: /otel-dotnet-auto/integrations.json
 OTEL_DOTNET_AUTO_METRICS_ADDITIONAL_SOURCES: sample-api
 OTEL_DOTNET_AUTO_TRACES_ADDITIONAL_SOURCES: sample-api
-OTEL_EXPORTER_OTLP_ENDPOINT: 'http://tempo-distributor.kube-monitor.svc.cluster.local:4317'
+OTEL_EXPORTER_OTLP_ENDPOINT: 'http://otel.observability.svc.cluster.local:4317'
 OTEL_EXPORTER_OTLP_PROTOCOL: grpc
 OTEL_RESOURCE_ATTRIBUTES: "service.version=docker-image-name:imagetag, service.namespace=service-namespace"
 OTEL_SERVICE_NAME: sample-api
