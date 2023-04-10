@@ -1,4 +1,4 @@
-ARG dotnetImageTag=7.0-bullseye-slim
+ARG dotnetImageTag=7.0
 
 FROM mcr.microsoft.com/dotnet/aspnet:$dotnetImageTag AS base
 
@@ -7,15 +7,17 @@ FROM mcr.microsoft.com/dotnet/aspnet:$dotnetImageTag AS base
 FROM mcr.microsoft.com/dotnet/aspnet:7.0-bullseye-slim AS otel
 RUN apt-get update && apt-get install unzip -y
 #ARG ARCHIVE=opentelemetry-dotnet-instrumentation-linux-glibc.zip
-#ARG OTEL_VERSION=0.5.0
+#ARG OTEL_VERSION=0.6.0
 #ADD https://github.com/open-telemetry/opentelemetry-dotnet-instrumentation/releases/download/v$OTEL_VERSION/$ARCHIVE otel-dotnet-instrumentation.zip
 #從下載回來的備份來解壓縮，要更快的話可能要把成品直接解壓縮放著，或是不要用 zip 改用 linux 裡面原生就有的壓縮格式
-COPY OpenTelemetry.dotnet.AutoInstrumentation.Release/linux-glibc-0.5.0.zip otel-dotnet-instrumentation.zip
+COPY OpenTelemetry.dotnet.AutoInstrumentation.Release/linux-glibc-0.6.0.zip otel-dotnet-instrumentation.zip
 RUN unzip -q otel-dotnet-instrumentation.zip -d /otel-dotnet-auto
+#複製必要資料到 0.5.0 版時，此檔案的原始位置，這樣就不用調整舊版部署檔的參數路徑，而新的部署檔要使用新版路徑也可以
+RUN cp /otel-dotnet-auto/linux-x64/OpenTelemetry.AutoInstrumentation.Native.so /otel-dotnet-auto/OpenTelemetry.AutoInstrumentation.Native.so
 
 # Build Plugin
 # Plugin 專案使用 .net 7 撰寫
-FROM mcr.microsoft.com/dotnet/sdk:7.0-bullseye-slim AS build
+FROM mcr.microsoft.com/dotnet/sdk:$dotnetImageTag AS build
 WORKDIR /src
 COPY ["OpenTelemetry.AutoInstrumentation.AspNetCore.Plugins/OpenTelemetry.AutoInstrumentation.AspNetCore.Plugins.csproj", "OpenTelemetry.AutoInstrumentation.AspNetCore.Plugins/"]
 RUN dotnet restore "OpenTelemetry.AutoInstrumentation.AspNetCore.Plugins/OpenTelemetry.AutoInstrumentation.AspNetCore.Plugins.csproj"
