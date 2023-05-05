@@ -1,22 +1,18 @@
+# 目前 Plugin 專案使用 .net 7 撰寫，所以這邊僅支援 .net 7，如果要打包 .net 6 的話需要另外調整
 ARG dotnetImageTag=7.0
 
 FROM mcr.microsoft.com/dotnet/aspnet:$dotnetImageTag AS base
 
-#複製 k8s 自動追蹤套件，此套件只是去解壓縮線上已編譯好的版本，所以使用的 .net image 版本不影響結果
-#未來應持續關注 otel version，若有新版本應更新新版本
-FROM mcr.microsoft.com/dotnet/aspnet:7.0-bullseye-slim AS otel
-RUN apt-get update && apt-get install unzip -y
-#ARG ARCHIVE=opentelemetry-dotnet-instrumentation-linux-glibc.zip
-#ARG OTEL_VERSION=0.6.0
-#ADD https://github.com/open-telemetry/opentelemetry-dotnet-instrumentation/releases/download/v$OTEL_VERSION/$ARCHIVE otel-dotnet-instrumentation.zip
-#從下載回來的備份來解壓縮，要更快的話可能要把成品直接解壓縮放著，或是不要用 zip 改用 linux 裡面原生就有的壓縮格式
-COPY OpenTelemetry.dotnet.AutoInstrumentation.Release/linux-glibc-0.6.0.zip otel-dotnet-instrumentation.zip
-RUN unzip -q otel-dotnet-instrumentation.zip -d /otel-dotnet-auto
-#複製必要資料到 0.5.0 版時，此檔案的原始位置，這樣就不用調整舊版部署檔的參數路徑，而新的部署檔要使用新版路徑也可以
+# 處理 open telemetry dotnet auto instrumentation 套件
+# 這邊將官方發布的 zip 檔案重新打包成 tar.gz 檔案，可避免在 docker build 時還要等待 unzip 工具的安裝
+# 未來應持續關注 otel version，若有新版本應更新新版本
+FROM base AS otel
+COPY OpenTelemetry.dotnet.AutoInstrumentation.Release/linux-glibc-0.7.0.tar.gz otel-dotnet-instrumentation.tar.gz
+RUN tar -xzvf otel-dotnet-instrumentation.tar.gz && mv linux-glibc-0.7.0 otel-dotnet-auto
+#複製必要資料到 0.5.0 版時，此檔案的原始位置，這樣就不用調整舊版部署檔的參數路徑，也可以避免服務更換基底容器時還要異動部署設定的問題
 RUN cp /otel-dotnet-auto/linux-x64/OpenTelemetry.AutoInstrumentation.Native.so /otel-dotnet-auto/OpenTelemetry.AutoInstrumentation.Native.so
 
 # Build Plugin
-# Plugin 專案使用 .net 7 撰寫
 FROM mcr.microsoft.com/dotnet/sdk:$dotnetImageTag AS build
 WORKDIR /src
 COPY ["OpenTelemetry.AutoInstrumentation.AspNetCore.Plugins/OpenTelemetry.AutoInstrumentation.AspNetCore.Plugins.csproj", "OpenTelemetry.AutoInstrumentation.AspNetCore.Plugins/"]

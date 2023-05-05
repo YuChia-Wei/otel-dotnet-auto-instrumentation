@@ -5,7 +5,7 @@ namespace OpenTelemetry.AutoInstrumentation.AspNetCore.Plugins;
 public static class HttpClientRequestHostChecker
 {
     /// <summary>
-    /// 要求對象是需要收集追蹤資料的目標 (非 exceptionless / flagsmith / loki)
+    /// 要求對象是需要收集追蹤資料的目標
     /// </summary>
     /// <param name="host"></param>
     /// <returns></returns>

@@ -1,12 +1,32 @@
-﻿using Microsoft.AspNetCore.Http;
-using OpenTelemetry.Instrumentation.AspNetCore;
+﻿using OpenTelemetry.Instrumentation.AspNetCore;
 using OpenTelemetry.Instrumentation.Http;
 using OpenTelemetry.Instrumentation.SqlClient;
+using OpenTelemetry.Resources;
 
 namespace OpenTelemetry.AutoInstrumentation.AspNetCore.Plugins;
 
 public class OptionsPlugin
 {
+    /// <summary>
+    /// 自訂資料標籤，補上一些可能需要的資料
+    /// </summary>
+    /// <param name="builder"></param>
+    /// <returns></returns>
+    public ResourceBuilder ConfigureResource(ResourceBuilder builder)
+    {
+        // My custom logic here
+        // Please note this method is common to set the resource for trace, logs and metrics.
+        // This method could be overridden by ConfigureTracesOptions, ConfigureMeterProvider and ConfigureLogsOptions
+        // by calling SetResourceBuilder with new object.
+
+        builder.AddAttributes(new KeyValuePair<string, object>[]
+        {
+            new("container.name", Environment.MachineName)
+        });
+
+        return builder;
+    }
+
     /// <summary>
     /// AspNetCore 追蹤 (外往內的要求)
     /// </summary>
@@ -39,12 +59,15 @@ public class OptionsPlugin
     public void ConfigureTracesOptions(SqlClientInstrumentationOptions options)
     {
         options.RecordException = true;
+
+        // 這邊建議視情況開啟，可以用環境參數去控制開關
         options.SetDbStatementForText = true;
     }
 
-    // To configure plugin, before OTel SDK configuration is called.
+    /// <summary>
+    /// To configure plugin, before OTel SDK configuration is called.
+    /// </summary>
     public void Initializing()
     {
-        // My custom logic here
     }
 }
