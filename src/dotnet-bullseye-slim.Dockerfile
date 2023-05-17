@@ -1,18 +1,18 @@
 ARG dotnetVersion=7.0
 
-FROM mcr.microsoft.com/dotnet/aspnet:${dotnetVersion}-alpine AS base
+FROM mcr.microsoft.com/dotnet/aspnet:${dotnetVersion}-bullseye-slim AS base
 
 # 處理 open telemetry dotnet auto instrumentation 套件
 # 這邊將官方發布的 zip 檔案重新打包成 tar.gz 檔案，可避免在 docker build 時還要等待 unzip 工具的安裝
 # 未來應持續關注 otel version，若有新版本應更新新版本
 FROM base AS otel
-COPY OpenTelemetry.dotnet.AutoInstrumentation.Release/linux-musl-0.7.0.tar.gz otel-dotnet-instrumentation.tar.gz
-RUN tar -xzvf otel-dotnet-instrumentation.tar.gz && mv linux-musl-0.7.0 otel-dotnet-auto
-#複製必要資料到 0.5.0 版時，此檔案的原始位置，這樣就不用調整舊版部署檔的參數路徑，而新的部署檔要使用新版路徑也可以
-RUN cp /otel-dotnet-auto/linux-musl-x64/OpenTelemetry.AutoInstrumentation.Native.so /otel-dotnet-auto/OpenTelemetry.AutoInstrumentation.Native.so
+COPY OpenTelemetry.dotnet.AutoInstrumentation.Release/linux-glibc-0.7.0.tar.gz otel-dotnet-instrumentation.tar.gz
+RUN tar -xzvf otel-dotnet-instrumentation.tar.gz && mv linux-glibc-0.7.0 otel-dotnet-auto
+#複製必要資料到 0.5.0 版時，此檔案的原始位置，這樣就不用調整舊版部署檔的參數路徑，也可以避免服務更換基底容器時還要異動部署設定的問題
+RUN cp /otel-dotnet-auto/linux-x64/OpenTelemetry.AutoInstrumentation.Native.so /otel-dotnet-auto/OpenTelemetry.AutoInstrumentation.Native.so
 
 # Build Plugin
-FROM mcr.microsoft.com/dotnet/sdk:${dotnetVersion}-alpine AS build
+FROM mcr.microsoft.com/dotnet/sdk:${dotnetVersion}-bullseye-slim AS build
 ARG dotnetVersion=7.0
 WORKDIR /src
 COPY ["OpenTelemetry.AutoInstrumentation.AspNetCore.Plugins/OpenTelemetry.AutoInstrumentation.AspNetCore.Plugins.csproj", "OpenTelemetry.AutoInstrumentation.AspNetCore.Plugins/"]
