@@ -12,7 +12,8 @@ RUN tar -xzvf otel-dotnet-instrumentation.tar.gz && mv linux-glibc-0.7.0 otel-do
 RUN cp /otel-dotnet-auto/linux-x64/OpenTelemetry.AutoInstrumentation.Native.so /otel-dotnet-auto/OpenTelemetry.AutoInstrumentation.Native.so
 
 # Build Plugin
-FROM mcr.microsoft.com/dotnet/sdk:${dotnetVersion}-bullseye-slim AS build
+# FROM mcr.microsoft.com/dotnet/sdk:${dotnetVersion}-bullseye-slim AS build
+FROM mcr.microsoft.com/dotnet/sdk:7.0-bullseye-slim AS build
 ARG dotnetVersion=7.0
 WORKDIR /src
 COPY ["OpenTelemetry.AutoInstrumentation.AspNetCore.Plugins/OpenTelemetry.AutoInstrumentation.AspNetCore.Plugins.csproj", "OpenTelemetry.AutoInstrumentation.AspNetCore.Plugins/"]
