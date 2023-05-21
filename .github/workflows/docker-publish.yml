@@ -24,7 +24,8 @@ env:
   REGISTRY: ghcr.io
   # github.repository as <account>/<repo>
   IMAGE_NAME: ${{ github.repository }}
-  IMAGE_TAG: 7.0-bullseye-slim
+  IMAGE_TAG: ${{github.tags}}
+  # IMAGE_TAG: 7.0-bullseye-slim
 
 jobs:
   build:
@@ -35,6 +36,14 @@ jobs:
       # This is used to complete the identity challenge
       # with sigstore/fulcio when running outside of PRs.
       id-token: write
+    strategy:
+      matrix:
+        dotnet-version:
+          - "6.0"
+          - "7.0"
+        os:
+          - alpine
+          - bullseye-slim
 
     steps:
       - name: Checkout repository
@@ -77,12 +86,14 @@ jobs:
         uses: docker/build-push-action@ac9327eae2b366085ac7f6a2d02df8aa8ead720a
         with:
           context: ./src
+          file: ./src/dotnet-${{ matrix.os }}.Dockerfile
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.meta.outputs.tags }}
-#          tags: ${{ env.IMAGE_TAG }}
+          tags: ${{matrix.dotnet-version}}-${{ matrix.os }}
+        #   tags: ${{ steps.meta.outputs.tags }}
+        #   tags: ${{ env.IMAGE_TAG }}
           labels: ${{ steps.meta.outputs.labels }}
-#          cache-from: type=gha
-#          cache-to: type=gha,mode=max
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
       # Sign the resulting Docker image digest except on PRs.
       # This will only write to the public Rekor transparency log when the Docker

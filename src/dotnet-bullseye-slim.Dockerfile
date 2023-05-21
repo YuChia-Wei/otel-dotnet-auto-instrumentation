@@ -1,7 +1,6 @@
-# 目前 Plugin 專案使用 .net 7 撰寫，所以這邊僅支援 .net 7，如果要打包 .net 6 的話需要另外調整
-ARG dotnetImageTag=7.0
+ARG dotnetVersion=7.0
 
-FROM mcr.microsoft.com/dotnet/aspnet:$dotnetImageTag AS base
+FROM mcr.microsoft.com/dotnet/aspnet:${dotnetVersion}-bullseye-slim AS base
 
 # 處理 open telemetry dotnet auto instrumentation 套件
 # 這邊將官方發布的 zip 檔案重新打包成 tar.gz 檔案，可避免在 docker build 時還要等待 unzip 工具的安裝
@@ -13,19 +12,20 @@ RUN tar -xzvf otel-dotnet-instrumentation.tar.gz && mv linux-glibc-0.7.0 otel-do
 RUN cp /otel-dotnet-auto/linux-x64/OpenTelemetry.AutoInstrumentation.Native.so /otel-dotnet-auto/OpenTelemetry.AutoInstrumentation.Native.so
 
 # Build Plugin
-FROM mcr.microsoft.com/dotnet/sdk:$dotnetImageTag AS build
+FROM mcr.microsoft.com/dotnet/sdk:${dotnetVersion}-bullseye-slim AS build
+ARG dotnetVersion=7.0
 WORKDIR /src
 COPY ["OpenTelemetry.AutoInstrumentation.AspNetCore.Plugins/OpenTelemetry.AutoInstrumentation.AspNetCore.Plugins.csproj", "OpenTelemetry.AutoInstrumentation.AspNetCore.Plugins/"]
 RUN dotnet restore "OpenTelemetry.AutoInstrumentation.AspNetCore.Plugins/OpenTelemetry.AutoInstrumentation.AspNetCore.Plugins.csproj"
 COPY . .
 WORKDIR "/src/OpenTelemetry.AutoInstrumentation.AspNetCore.Plugins"
-RUN dotnet build "OpenTelemetry.AutoInstrumentation.AspNetCore.Plugins.csproj" -c Release -o /app/build
+RUN dotnet build "OpenTelemetry.AutoInstrumentation.AspNetCore.Plugins.csproj" -c Release -o /app/build -f net${dotnetVersion}
 
 FROM build AS publish
-RUN dotnet publish "OpenTelemetry.AutoInstrumentation.AspNetCore.Plugins.csproj" -c Release -o /app/publish
+ARG dotnetVersion=7.0
+RUN dotnet publish "OpenTelemetry.AutoInstrumentation.AspNetCore.Plugins.csproj" -c Release -o /app/publish -f net${dotnetVersion}
 
 FROM base AS final
-# 環境參數設定說明 https://stackoverflow.com/a/33379487
 ENV OTEL_DOTNET_AUTO_PLUGINS="OpenTelemetry.AutoInstrumentation.AspNetCore.Plugins.OptionsPlugin, OpenTelemetry.AutoInstrumentation.AspNetCore.Plugins, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
 COPY --from=otel /otel-dotnet-auto /otel-dotnet-auto
 COPY --from=publish /app/publish /otel-dotnet-auto/net
