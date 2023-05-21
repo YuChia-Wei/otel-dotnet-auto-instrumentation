@@ -87,7 +87,8 @@ jobs:
           context: ./src
           file: ./src/dotnet-${{ matrix.os }}.Dockerfile
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ matrix.dotnet-version }}-${{ matrix.os }}
+          tags: ghcr.io/yuchia-wei/otel-dotnet-auto-instrumentation:${{ matrix.dotnet-version }}-${{ matrix.os }}
+        #   tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ matrix.dotnet-version }}-${{ matrix.os }}
         #   tags: ${{ steps.meta.outputs.tags }}
         #   tags: ${{ env.IMAGE_TAG }}
           labels: |
