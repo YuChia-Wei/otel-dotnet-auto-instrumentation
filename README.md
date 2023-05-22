@@ -3,14 +3,33 @@
 OpenTelemetry .NET Automatic Instrumentation
 source: [opentelemetry-dotnet-instrumentation](https://github.com/open-telemetry/opentelemetry-dotnet-instrumentation)
 
-**Note: This repo is not yet complete!!!!!**
+This repository has currently published the following container images, which can be used if needed:
+- ghcr.io/yuchia-wei/otel-dotnet-auto-instrumentation:6.0-alpine
+- ghcr.io/yuchia-wei/otel-dotnet-auto-instrumentation:7.0-alpine
+- ghcr.io/yuchia-wei/otel-dotnet-auto-instrumentation:6.0-bullseye-slim
+- ghcr.io/yuchia-wei/otel-dotnet-auto-instrumentation:7.0-bullseye-slim
 
-## 簡介
+## Introduction
 
-AspNetCore
-基底映像檔，內部預先安裝 [OpenTelemetry .NET Automatic Instrumentation](https://github.com/open-telemetry/opentelemetry-dotnet-instrumentation)
-並設定好必要的環境參數與所需的自訂 plugin。
-使用此 image base 打包的容器預設即支援使用 open telemetry 協定輸出網路路由追蹤資料到外部服務。
+此容器基於微軟官方 mcr.microsoft.com/dotnet/aspnet 容器，預先安裝好 [OpenTelemetry .NET Automatic Instrumentation](https://github.com/open-telemetry/opentelemetry-dotnet-instrumentation) 0.7.0 版套件，並另外製作專用 plugin 後重新打包的版本。
+使用 plugin 所需的參數已經設定完畢，其他執行時需要設定的環境參數於下一章節中有簡單整理，但我會建議去 [open-telemetry dotnet instrumentation documentation](https://github.com/open-telemetry/opentelemetry-dotnet-instrumentation/blob/v0.7.0/docs/README.md) 查閱文件會更好。
+這邊預裝的 plugin 功能為
+1. 自動排除 loki 開頭的網址的 http 對外流量追蹤 (此功能在我現在已經全面使用 open-telemetry 傳輸 log 之後已無需要，後續我會再評估官方設定參數有無相關功能，若有，我會將此部分設定移除)
+2. 自動排除 a10 / kube-probe 等來源的流量追蹤。此功能主要目的是要忽略 kubernetes 與網路設定的 health check 流量，以減少無用的追蹤資料。
+
+---
+
+> This translation is done using ChatGPT. If you have any questions, feel free to contact me.
+ 
+This container is based on the official Microsoft mcr.microsoft.com/dotnet/aspnet container, with the pre-installed [OpenTelemetry .NET Automatic Instrumentation](https://github.com/open-telemetry/opentelemetry-dotnet-instrumentation) version 0.7.0 package. It has been repackaged after incorporating a custom plugin.
+
+The necessary parameters for using the plugin have been pre-configured. Other environment variables that need to be set during runtime will be briefly summarized in the next chapter, but I would recommend referring to the [open-telemetry dotnet instrumentation documentation](https://github.com/open-telemetry/opentelemetry-dotnet-instrumentation/blob/v0.7.0/docs/README.md) for better understanding.
+
+The pre-installed plugin provides the following functionalities:
+
+1. Automatic exclusion of outbound HTTP traffic from URLs starting with 'loki' (Since I have already transitioned to using open-telemetry for logging, this feature is no longer needed. I will re-evaluate if the official configuration parameters include similar functionality and remove this setting if applicable.)
+2. Automatic exclusion of traffic from sources like 'a10' and 'kube-probe'. This functionality is primarily aimed at ignoring Kubernetes and network configuration health check traffic to reduce unnecessary tracking data.
+
 
 ## 執行時需要的環境參數
 
