@@ -10,8 +10,6 @@ public class HttpClientRequestHostCheckerTests
     [Owner("YuChia")]
     [TestCategory(nameof(HttpClientRequestHostChecker))]
     [TestProperty(nameof(HttpClientRequestHostChecker), nameof(HttpClientRequestHostChecker.IsValidHost))]
-    [DataRow("http://loki.kube-monitor.svc.cluster.local", false)]
-    [DataRow("http://loki.kube-monitor.svc.cluster.local:3100/loki/api/v1/push", false)]
     [DataRow("http://other-service.other-namespace.svc.cluster.local/logo.png", true)]
     public void 檢查是否為需要啟動追蹤的路徑(string host, bool expected)
     {

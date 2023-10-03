@@ -11,11 +11,11 @@ This repository has currently published the following container images, which ca
 
 ## Introduction
 
-此容器基於微軟官方 mcr.microsoft.com/dotnet/aspnet 容器，預先安裝好 [OpenTelemetry .NET Automatic Instrumentation](https://github.com/open-telemetry/opentelemetry-dotnet-instrumentation) 0.7.0 版套件，並另外製作專用 plugin 後重新打包的版本。
+此容器基於微軟官方 mcr.microsoft.com/dotnet/aspnet 容器，預先安裝好 [OpenTelemetry .NET Automatic Instrumentation](https://github.com/open-telemetry/opentelemetry-dotnet-instrumentation) 1.0.2 版套件，並另外製作專用 plugin 後重新打包的版本。
 使用 plugin 所需的參數已經設定完畢，其他執行時需要設定的環境參數於下一章節中有簡單整理，但我會建議去 [open-telemetry dotnet instrumentation documentation](https://github.com/open-telemetry/opentelemetry-dotnet-instrumentation/blob/v0.7.0/docs/README.md) 查閱文件會更好。
 這邊預裝的 plugin 功能為
-1. 自動排除 loki 開頭的網址的 http 對外流量追蹤 (此功能在我現在已經全面使用 open-telemetry 傳輸 log 之後已無需要，後續我會再評估官方設定參數有無相關功能，若有，我會將此部分設定移除)
-2. 自動排除 a10 / kube-probe 等來源的流量追蹤。此功能主要目的是要忽略 kubernetes 與網路設定的 health check 流量，以減少無用的追蹤資料。
+
+1. 自動排除 a10 / kube-probe 等來源的流量追蹤。此功能主要目的是要忽略 kubernetes 與網路設定的 health check 流量，以減少無用的追蹤資料。
 
 ---
 
@@ -39,10 +39,8 @@ The pre-installed plugin provides the following functionalities:
 ### Open Telemetry 執行參數
 
 - CORECLR_PROFILER_PATH 有關的環境參數的部分，本專案在建置時有複製一份檔案回到舊版位置，所以部署檔可改可不改
-- 目前版本在 .net 7 有 Log 重複送出的問題，所以建議 `CORECLR_ENABLE_PROFILING` 參數設定為 0 來解決
-- 目前 opentelemetry dotnet instrumentation 並不直接支援 serilog，如果應用服務使用 serilog 作為主要的 Log 輸出工具，在採用此 base image 時會無法正常輸出 log，需要在 UseSerilog 時額外設定 writeToProviders = true。
-  - **注意！這仍會被 .net7 重複 log 的問題影響，而且關掉 CLR Profiler 也無法解決！**
-  - 暫時性的最佳解是放棄 Serilog 改回原生的 Log 工具
+- --目前版本在 .net 7 有 Log 重複送出的問題，所以建議 `CORECLR_ENABLE_PROFILING` 參數設定為 0 來解決-- 官方說明在 1.0.2 版已修正
+- 目前 OpenTelemetry dotnet instrumentation 並不直接支援 serilog，如果應用服務使用 serilog 作為主要的 Log 輸出工具，在採用此 base image 時會無法正常輸出 log，需要在 UseSerilog 時額外設定 writeToProviders = true。
 
 | Environment variable       | .NET version                          | Value                                                                          |
 |----------------------------|---------------------------------------|--------------------------------------------------------------------------------|

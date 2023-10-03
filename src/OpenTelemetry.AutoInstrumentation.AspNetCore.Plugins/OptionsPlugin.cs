@@ -46,7 +46,7 @@ public class OptionsPlugin
         options.RecordException = true;
 
         // for .net / .net core
-        options.FilterHttpRequestMessage = httpRequestMessage => HttpClientRequestHostChecker.IsValidHost(httpRequestMessage.RequestUri?.Host);
+        // options.FilterHttpRequestMessage = httpRequestMessage => HttpClientRequestHostChecker.IsValidHost(httpRequestMessage.RequestUri?.Host);
 
         // for .net framework
         // options.FilterHttpWebRequest = request => true;
