@@ -1,4 +1,5 @@
-﻿using OpenTelemetry.Instrumentation.AspNetCore;
+using Microsoft.Extensions.Hosting;
+using OpenTelemetry.Instrumentation.AspNetCore;
 using OpenTelemetry.Instrumentation.Http;
 using OpenTelemetry.Instrumentation.SqlClient;
 using OpenTelemetry.Resources;
