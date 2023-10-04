@@ -19,9 +19,17 @@ public class OptionsPlugin
         // This method could be overridden by ConfigureTracesOptions, ConfigureMeterProvider and ConfigureLogsOptions
         // by calling SetResourceBuilder with new object.
 
+        //k8s 部署檔案會將 NODE NAME 設定到 NODE_NAME 環境參數
+        var nodeName = Environment.GetEnvironmentVariable("NODE_NAME");
+
+        //取得服務執行時設定的環境參數，理論上會存在，除非服務自己把它刪掉
+        var aspNetCoreEnv = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? Environments.Production;
+
         builder.AddAttributes(new KeyValuePair<string, object>[]
         {
-            new("container.name", Environment.MachineName)
+            new("host.name", nodeName ?? Environment.MachineName),
+            new("container.name", Environment.MachineName),
+            new("aspnetcore.environment", aspNetCoreEnv)
         });
 
         return builder;
@@ -35,6 +43,30 @@ public class OptionsPlugin
     {
         options.RecordException = true;
         options.Filter = context => HttpRequestUserAgentChecker.IsValidUser(context.Request.Headers.UserAgent);
+
+        // via. https://github.com/open-telemetry/opentelemetry-dotnet/tree/main/src/OpenTelemetry.Instrumentation.AspNetCore#enrich
+        options.EnrichWithHttpRequest = (activity, request) =>
+        {
+            // 記錄使用者 IP
+            var clientIp = request.Headers["X-Forwarded-For"].FirstOrDefault();
+
+            if (string.IsNullOrWhiteSpace(clientIp))
+            {
+                var remoteIp = request.HttpContext.Connection.RemoteIpAddress;
+
+                if (remoteIp != null)
+                {
+                    clientIp = remoteIp.MapToIPv4().ToString();
+
+                    if (clientIp.StartsWith("::ffff:", StringComparison.OrdinalIgnoreCase))
+                    {
+                        clientIp = clientIp.ToLower().Replace("::ffff:", "");
+                    }
+                }
+            }
+
+            activity.SetTag("http.client.ip", clientIp);
+        };
     }
 
     /// <summary>
