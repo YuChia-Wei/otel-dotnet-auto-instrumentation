@@ -6,8 +6,8 @@ FROM mcr.microsoft.com/dotnet/aspnet:${dotnetVersion}-alpine AS base
 # 這邊將官方發布的 zip 檔案重新打包成 tar.gz 檔案，可避免在 docker build 時還要等待 unzip 工具的安裝
 # 未來應持續關注 otel version，若有新版本應更新新版本
 FROM base AS otel
-COPY OpenTelemetry.dotnet.AutoInstrumentation.Release/linux-musl-1.0.2.tar.gz otel-dotnet-instrumentation.tar.gz
-RUN tar -xzvf otel-dotnet-instrumentation.tar.gz && mv linux-musl-1.0.2 otel-dotnet-auto
+COPY otel.dotnet.AutoInstrumentation.Release/opentelemetry-dotnet-instrumentation-linux-musl.tar.gz otel-dotnet-instrumentation.tar.gz
+RUN tar -xzvf otel-dotnet-instrumentation.tar.gz && mv opentelemetry-dotnet-instrumentation-linux-musl otel-dotnet-auto
 #複製必要資料到 0.5.0 版時，此檔案的原始位置，這樣就不用調整舊版部署檔的參數路徑，而新的部署檔要使用新版路徑也可以
 RUN cp /otel-dotnet-auto/linux-musl-x64/OpenTelemetry.AutoInstrumentation.Native.so /otel-dotnet-auto/OpenTelemetry.AutoInstrumentation.Native.so
 
