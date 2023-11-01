@@ -1,6 +1,7 @@
 ARG dotnetVersion=7.0
+ARG BaseImageTag=${dotnetVersion}
 
-FROM mcr.microsoft.com/dotnet/aspnet:${dotnetVersion}-bullseye-slim AS base
+FROM mcr.microsoft.com/dotnet/aspnet:${BaseImageTag} AS base
 
 # 處理 open telemetry dotnet auto instrumentation 套件
 # 這邊將官方發布的 zip 檔案重新打包成 tar.gz 檔案，可避免在 docker build 時還要等待 unzip 工具的安裝
@@ -12,8 +13,8 @@ RUN tar -xzvf otel-dotnet-instrumentation.tar.gz && mv opentelemetry-dotnet-inst
 RUN cp /otel-dotnet-auto/linux-x64/OpenTelemetry.AutoInstrumentation.Native.so /otel-dotnet-auto/OpenTelemetry.AutoInstrumentation.Native.so
 
 # Build Plugin
-# FROM mcr.microsoft.com/dotnet/sdk:${dotnetVersion}-bullseye-slim AS build
-FROM mcr.microsoft.com/dotnet/sdk:7.0-bullseye-slim AS build
+# FROM mcr.microsoft.com/dotnet/sdk:${dotnetVersion} AS build
+FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 ARG dotnetVersion=7.0
 WORKDIR /src
 COPY ["OpenTelemetry.AutoInstrumentation.AspNetCore.Plugins/OpenTelemetry.AutoInstrumentation.AspNetCore.Plugins.csproj", "OpenTelemetry.AutoInstrumentation.AspNetCore.Plugins/"]
