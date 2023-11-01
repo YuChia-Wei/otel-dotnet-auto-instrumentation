@@ -46,28 +46,12 @@ public class OptionsPlugin
         options.Filter = context => HttpRequestUserAgentChecker.IsValidUser(context.Request.Headers.UserAgent);
 
         // via. https://github.com/open-telemetry/opentelemetry-dotnet/tree/main/src/OpenTelemetry.Instrumentation.AspNetCore#enrich
-        options.EnrichWithHttpRequest = (activity, request) =>
-        {
-            // 記錄使用者 IP
-            var clientIp = request.Headers["X-Forwarded-For"].FirstOrDefault();
+        options.EnrichWithHttpRequest = ActivitySourceExtenstion.EnrichHttpRequest();
 
-            if (string.IsNullOrWhiteSpace(clientIp))
-            {
-                var remoteIp = request.HttpContext.Connection.RemoteIpAddress;
-
-                if (remoteIp != null)
-                {
-                    clientIp = remoteIp.MapToIPv4().ToString();
-
-                    if (clientIp.StartsWith("::ffff:", StringComparison.OrdinalIgnoreCase))
-                    {
-                        clientIp = clientIp.ToLower().Replace("::ffff:", "");
-                    }
-                }
-            }
-
-            activity.SetTag("http.client.ip", clientIp);
-        };
+        //如果在服務中有使用 UseExceptionHandling() 或是在 ActionFilter 的時候把 Exception 處理過的話，可能會導致 otel 無法正確輸出例外資料
+        //所以這邊另外檢查回應內容並另外打包給 AspNetCoreInstrumentation 工具
+        //TODO: 需要多測試效果
+        options.EnrichWithHttpResponse = ActivitySourceExtenstion.EnrichHttpResponse();
     }
 
     /// <summary>
