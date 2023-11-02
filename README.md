@@ -4,15 +4,20 @@ OpenTelemetry .NET Automatic Instrumentation
 source: [opentelemetry-dotnet-instrumentation](https://github.com/open-telemetry/opentelemetry-dotnet-instrumentation)
 
 This repository has currently published the following container images, which can be used if needed:
+- ghcr.io/yuchia-wei/otel-dotnet-auto-instrumentation:6.0
 - ghcr.io/yuchia-wei/otel-dotnet-auto-instrumentation:6.0-alpine
+- ghcr.io/yuchia-wei/otel-dotnet-auto-instrumentation:6.0-bookworm-slim
+- ghcr.io/yuchia-wei/otel-dotnet-auto-instrumentation:7.0
 - ghcr.io/yuchia-wei/otel-dotnet-auto-instrumentation:7.0-alpine
-- ghcr.io/yuchia-wei/otel-dotnet-auto-instrumentation:6.0-bullseye-slim
-- ghcr.io/yuchia-wei/otel-dotnet-auto-instrumentation:7.0-bullseye-slim
+- ghcr.io/yuchia-wei/otel-dotnet-auto-instrumentation:7.0-bookworm-slim
+- ghcr.io/yuchia-wei/otel-dotnet-auto-instrumentation:8.0
+- ghcr.io/yuchia-wei/otel-dotnet-auto-instrumentation:8.0-alpine
+- ghcr.io/yuchia-wei/otel-dotnet-auto-instrumentation:8.0-bookworm-slim
 
 ## Introduction
 
-此容器基於微軟官方 mcr.microsoft.com/dotnet/aspnet 容器，預先安裝好 [OpenTelemetry .NET Automatic Instrumentation](https://github.com/open-telemetry/opentelemetry-dotnet-instrumentation) 1.0.2 版套件，並另外製作專用 plugin 後重新打包的版本。
-使用 plugin 所需的參數已經設定完畢，其他執行時需要設定的環境參數於下一章節中有簡單整理，但我會建議去 [open-telemetry dotnet instrumentation documentation](https://github.com/open-telemetry/opentelemetry-dotnet-instrumentation/blob/v0.7.0/docs/README.md) 查閱文件會更好。
+此容器基於微軟官方 mcr.microsoft.com/dotnet/aspnet 容器，預先安裝好 [OpenTelemetry .NET Automatic Instrumentation](https://github.com/open-telemetry/opentelemetry-dotnet-instrumentation) 1.1.0 版套件，並另外製作專用 plugin 後重新打包的版本。
+使用 plugin 所需的參數已經設定完畢，其他執行時需要設定的環境參數於下一章節中有簡單整理，但我會建議去 [open-telemetry dotnet instrumentation documentation](https://github.com/open-telemetry/opentelemetry-dotnet-instrumentation/blob/v1.1.0/docs/README.md) 查閱文件會更好。
 這邊預裝的 plugin 功能為
 
 1. 自動排除 a10 / kube-probe 等來源的流量追蹤。此功能主要目的是要忽略 kubernetes 與網路設定的 health check 流量，以減少無用的追蹤資料。
@@ -33,8 +38,8 @@ The pre-installed plugin provides the following functionalities:
 
 ## 執行時需要的環境參數
 
-- [官方說明文件](https://github.com/open-telemetry/opentelemetry-dotnet-instrumentation/blob/v0.7.0/docs/README.md)
-- [官方設定參數說明](https://github.com/open-telemetry/opentelemetry-dotnet-instrumentation/blob/v0.7.0/docs/config.md)
+- [官方說明文件](https://github.com/open-telemetry/opentelemetry-dotnet-instrumentation/blob/v1.1.0/docs/README.md)
+- [官方設定參數說明](https://github.com/open-telemetry/opentelemetry-dotnet-instrumentation/blob/v1.1.0/docs/config.md)
 
 ### Open Telemetry 執行參數
 
