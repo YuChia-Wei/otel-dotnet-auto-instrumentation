@@ -2,12 +2,24 @@ using Microsoft.Extensions.Hosting;
 using OpenTelemetry.Instrumentation.AspNetCore;
 using OpenTelemetry.Instrumentation.Http;
 using OpenTelemetry.Instrumentation.SqlClient;
+using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 
 namespace OpenTelemetry.AutoInstrumentation.AspNetCore.Plugins;
 
 public class OptionsPlugin
 {
+    // To configure metrics SDK after Auto Instrumentation configured SDK
+    public MeterProviderBuilder AfterConfigureMeterProvider(MeterProviderBuilder builder)
+    {
+        //dotnet 8 metrics
+        // 在 open telemetry auto instrumentation 1.2.0 中，不用手動注入，已經被包含在以下位置
+        // https://github.com/open-telemetry/opentelemetry-dotnet-instrumentation/blob/v1.2.0/src/OpenTelemetry.AutoInstrumentation/Configurations/EnvironmentConfigurationMetricHelper.cs#L97C56-L97C56
+        // builder.AddMeter("Microsoft.AspNetCore.Hosting",
+        //                  "Microsoft.AspNetCore.Server.Kestrel");
+        return builder;
+    }
+
     /// <summary>
     /// 自訂資料標籤，補上一些可能需要的資料
     /// </summary>
@@ -50,7 +62,6 @@ public class OptionsPlugin
 
         //如果在服務中有使用 UseExceptionHandling() 或是在 ActionFilter 的時候把 Exception 處理過的話，可能會導致 otel 無法正確輸出例外資料
         //所以這邊另外檢查回應內容並另外打包給 AspNetCoreInstrumentation 工具
-        //TODO: 需要多測試效果
         options.EnrichWithHttpResponse = ActivitySourceExtenstion.EnrichHttpResponse();
     }
 
