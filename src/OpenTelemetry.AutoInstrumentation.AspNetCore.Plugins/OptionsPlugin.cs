@@ -52,7 +52,7 @@ public class OptionsPlugin
     /// AspNetCore 追蹤 (外往內的要求)
     /// </summary>
     /// <param name="options"></param>
-    public void ConfigureTracesOptions(AspNetCoreInstrumentationOptions options)
+    public void ConfigureTracesOptions(AspNetCoreTraceInstrumentationOptions options)
     {
         options.RecordException = true;
         options.Filter = context => HttpRequestUserAgentChecker.IsValidUser(context.Request.Headers.UserAgent);
@@ -69,7 +69,7 @@ public class OptionsPlugin
     /// HttpClient 追蹤 (內往外的要求)
     /// </summary>
     /// <param name="options"></param>
-    public void ConfigureTracesOptions(HttpClientInstrumentationOptions options)
+    public void ConfigureTracesOptions(HttpClientTraceInstrumentationOptions options)
     {
         options.RecordException = true;
 
