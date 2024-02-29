@@ -74,6 +74,7 @@ public class OptionsPlugin
         options.RecordException = true;
 
         // for .net / .net core
+        // Request 過濾器
         // options.FilterHttpRequestMessage = httpRequestMessage => HttpClientRequestHostChecker.IsValidHost(httpRequestMessage.RequestUri?.Host);
 
         // for .net framework
@@ -84,12 +85,9 @@ public class OptionsPlugin
     /// should be rename to ConfigureTracesOptions when OpenTelemetry.DotNet.Instrumentation upgrade to ^0.5.1
     /// </summary>
     /// <param name="options"></param>
-    public void ConfigureTracesOptions(SqlClientInstrumentationOptions options)
+    public void ConfigureTracesOptions(SqlClientTraceInstrumentationOptions options)
     {
         options.RecordException = true;
-
-        // 這邊建議視情況開啟，可以用環境參數去控制開關
-        options.SetDbStatementForText = true;
     }
 
     /// <summary>

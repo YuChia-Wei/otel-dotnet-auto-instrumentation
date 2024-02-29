@@ -57,8 +57,8 @@ The pre-installed plugin provides the following functionalities:
 
 ## 執行時需要的環境參數
 
-- [官方說明文件](https://github.com/open-telemetry/opentelemetry-dotnet-instrumentation/blob/v1.1.0/docs/README.md)
-- [官方設定參數說明](https://github.com/open-telemetry/opentelemetry-dotnet-instrumentation/blob/v1.1.0/docs/config.md)
+- [官方說明文件](https://github.com/open-telemetry/opentelemetry-dotnet-instrumentation/blob/v1.4.0/docs/README.md)
+- [官方設定參數說明](https://github.com/open-telemetry/opentelemetry-dotnet-instrumentation/blob/v1.4.0/docs/config.md)
 
 ### Open Telemetry 執行參數
 
@@ -94,6 +94,16 @@ The pre-installed plugin provides the following functionalities:
 | OTEL_EXPORTER_OTLP_PROTOCOL                 | grpc                                                                                                        |
 | OTEL_RESOURCE_ATTRIBUTES                    | service.version=docker-image-name:imagetag, service.namespace=service-namespace, deployment.environment=dev |
 | OTEL_SERVICE_NAME                           | sample-api                                                                                                  | 
+
+### Instrumentation options (1.4.0 版後支援)
+
+**因為 1.4.0 版後已支援使用環境參數調整 SQL 語法的輸出，因此在 Plugin 中的設定已被移除**
+
+| Environment variable                                            | Default value |
+|-----------------------------------------------------------------|---------------|
+| `OTEL_DOTNET_AUTO_ENTITYFRAMEWORKCORE_SET_DBSTATEMENT_FOR_TEXT` | `false`       |
+| `OTEL_DOTNET_AUTO_GRAPHQL_SET_DOCUMENT`                         | `false`       |
+| `OTEL_DOTNET_AUTO_SQLCLIENT_SET_DBSTATEMENT_FOR_TEXT`           | `false`       |
 
 ## 更新命令筆記
 
