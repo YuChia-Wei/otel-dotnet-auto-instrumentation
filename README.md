@@ -13,7 +13,7 @@ source: [opentelemetry-dotnet-instrumentation](https://github.com/open-telemetry
 
 ### OpenTelemetry dotnet instrumentation version
 
-- 1.4.0
+- 1.5.0
 
 ### published images
 
@@ -29,13 +29,9 @@ source: [opentelemetry-dotnet-instrumentation](https://github.com/open-telemetry
 
 ## Introduction
 
-此容器基於微軟官方 mcr.microsoft.com/dotnet/aspnet
-容器，預先安裝好 [OpenTelemetry .NET Automatic Instrumentation](https://github.com/open-telemetry/opentelemetry-dotnet-instrumentation)
-1.1.0 版套件，並另外製作專用 plugin 後重新打包的版本。
+此容器基於微軟官方 mcr.microsoft.com/dotnet/aspnet 容器，預先安裝好 [OpenTelemetry .NET Automatic Instrumentation](https://github.com/open-telemetry/opentelemetry-dotnet-instrumentation) 1.5.0 版套件，並另外製作專用 plugin 後重新打包的版本。
 
-使用 plugin
-所需的參數已經設定完畢，其他執行時需要設定的環境參數於下一章節中有簡單整理，但我會建議去 [open-telemetry dotnet instrumentation documentation](https://github.com/open-telemetry/opentelemetry-dotnet-instrumentation/blob/v1.1.0/docs/README.md)
-查閱文件會更好。
+使用 plugin 所需的參數已經設定完畢，其他執行時需要設定的環境參數於下一章節中有簡單整理，但我會建議去 [open-telemetry dotnet instrumentation documentation](https://github.com/open-telemetry/opentelemetry-dotnet-instrumentation/blob/v1.1.0/docs/README.md) 查閱文件會更好。
 
 這邊預裝的 plugin 功能如下
 
@@ -45,20 +41,19 @@ source: [opentelemetry-dotnet-instrumentation](https://github.com/open-telemetry
 
 > This translation is done using ChatGPT. If you have any questions, feel free to contact me.
  
-This container is based on the official Microsoft mcr.microsoft.com/dotnet/aspnet container, with the pre-installed [OpenTelemetry .NET Automatic Instrumentation](https://github.com/open-telemetry/opentelemetry-dotnet-instrumentation) version 0.7.0 package. It has been repackaged after incorporating a custom plugin.
+This container is based on the official Microsoft mcr.microsoft.com/dotnet/aspnet container, with the pre-installed [OpenTelemetry .NET Automatic Instrumentation](https://github.com/open-telemetry/opentelemetry-dotnet-instrumentation) version 1.5.0 package. It has been repackaged after incorporating a custom plugin.
 
-The necessary parameters for using the plugin have been pre-configured. Other environment variables that need to be set during runtime will be briefly summarized in the next chapter, but I would recommend referring to the [open-telemetry dotnet instrumentation documentation](https://github.com/open-telemetry/opentelemetry-dotnet-instrumentation/blob/v0.7.0/docs/README.md) for better understanding.
+The necessary parameters for using the plugin have been pre-configured. Other environment variables that need to be set during runtime will be briefly summarized in the next chapter, but I would recommend referring to the [open-telemetry dotnet instrumentation documentation](https://github.com/open-telemetry/opentelemetry-dotnet-instrumentation/blob/v1.5.0/docs/README.md) for better understanding.
 
 The pre-installed plugin provides the following functionalities:
 
 1. Automatic exclusion of outbound HTTP traffic from URLs starting with 'loki' (Since I have already transitioned to using open-telemetry for logging, this feature is no longer needed. I will re-evaluate if the official configuration parameters include similar functionality and remove this setting if applicable.)
 2. Automatic exclusion of traffic from sources like 'a10' and 'kube-probe'. This functionality is primarily aimed at ignoring Kubernetes and network configuration health check traffic to reduce unnecessary tracking data.
 
-
 ## 執行時需要的環境參數
 
-- [官方說明文件](https://github.com/open-telemetry/opentelemetry-dotnet-instrumentation/blob/v1.4.0/docs/README.md)
-- [官方設定參數說明](https://github.com/open-telemetry/opentelemetry-dotnet-instrumentation/blob/v1.4.0/docs/config.md)
+- [官方說明文件](https://github.com/open-telemetry/opentelemetry-dotnet-instrumentation/blob/v1.5.0/docs/README.md)
+- [官方設定參數說明](https://github.com/open-telemetry/opentelemetry-dotnet-instrumentation/blob/v1.5.0/docs/config.md)
 
 ### Open Telemetry 執行參數
 
@@ -111,12 +106,12 @@ The pre-installed plugin provides the following functionalities:
 **不過可能會需要額外安裝 unzip，因為 wsl 的 ubuntu 可能原生未包含此套件**
 
 ```shell
-wget https://github.com/open-telemetry/opentelemetry-dotnet-instrumentation/releases/download/v1.4.0/opentelemetry-dotnet-instrumentation-linux-glibc.zip
-unzip opentelemetry-dotnet-instrumentation-linux-glibc.zip -d opentelemetry-dotnet-instrumentation-linux-glibc
+wget https://github.com/open-telemetry/opentelemetry-dotnet-instrumentation/releases/download/v1.5.0/opentelemetry-dotnet-instrumentation-linux-glibc-x64.zip
+unzip opentelemetry-dotnet-instrumentation-linux-glibc-x64.zip -d opentelemetry-dotnet-instrumentation-linux-glibc
 tar -czvf opentelemetry-dotnet-instrumentation-linux-glibc.tar.gz opentelemetry-dotnet-instrumentation-linux-glibc/
 
-wget https://github.com/open-telemetry/opentelemetry-dotnet-instrumentation/releases/download/v1.4.0/opentelemetry-dotnet-instrumentation-linux-musl.zip
-unzip opentelemetry-dotnet-instrumentation-linux-musl.zip -d opentelemetry-dotnet-instrumentation-linux-musl
+wget https://github.com/open-telemetry/opentelemetry-dotnet-instrumentation/releases/download/v1.5.0/opentelemetry-dotnet-instrumentation-linux-musl-x64.zip
+unzip opentelemetry-dotnet-instrumentation-linux-musl-x64.zip -d opentelemetry-dotnet-instrumentation-linux-musl
 tar -czvf opentelemetry-dotnet-instrumentation-linux-musl.tar.gz opentelemetry-dotnet-instrumentation-linux-musl/
 ```
 
@@ -124,7 +119,7 @@ tar -czvf opentelemetry-dotnet-instrumentation-linux-musl.tar.gz opentelemetry-d
 
 OpenTelemetry .NET Automatic Instrumentation 有提供掛載外掛，可以修改設定或是覆寫 options。
 
-實作前請先閱讀官方文件：<a href="https://github.com/open-telemetry/opentelemetry-dotnet-instrumentation/blob/v1.4.0/docs/plugins.md" target="_blank">Plugins - GitHub</a>
+實作前請先閱讀官方文件：<a href="https://github.com/open-telemetry/opentelemetry-dotnet-instrumentation/blob/v1.5.0/docs/plugins.md" target="_blank">Plugins - GitHub</a>
 
 ### 開發須知
 
@@ -136,7 +131,7 @@ OpenTelemetry .NET Automatic Instrumentation 有提供掛載外掛，可以修�
 
 ### 相依版本
 
-copy from [opentelemetry-dotnet-instrumentation 1.4.0 plugins doc](https://github.com/open-telemetry/opentelemetry-dotnet-instrumentation/blob/v1.4.0/docs/plugins.md)
+copy from [opentelemetry-dotnet-instrumentation 1.5.0 plugins doc](https://github.com/open-telemetry/opentelemetry-dotnet-instrumentation/blob/v1.5.0/docs/plugins.md)
 
 ## Supported Options
 
@@ -144,37 +139,37 @@ copy from [opentelemetry-dotnet-instrumentation 1.4.0 plugins doc](https://githu
 
 | Options type                                                                              | NuGet package                                     | NuGet version |
 |-------------------------------------------------------------------------------------------|---------------------------------------------------|---------------|
-| OpenTelemetry.Exporter.ConsoleExporterOptions                                             | OpenTelemetry.Exporter.Console                    | 1.7.0         |
-| OpenTelemetry.Exporter.ZipkinExporterOptions                                              | OpenTelemetry.Exporter.Zipkin                     | 1.7.0         |
-| OpenTelemetry.Exporter.OtlpExporterOptions                                                | OpenTelemetry.Exporter.OpenTelemetryProtocol      | 1.7.0         |
-| OpenTelemetry.Instrumentation.AspNet.AspNetInstrumentationOptions                         | OpenTelemetry.Instrumentation.AspNet              | 1.7.0-beta.2  |
-| OpenTelemetry.Instrumentation.AspNetCore.AspNetCoreTraceInstrumentationOptions            | OpenTelemetry.Instrumentation.AspNetCore          | 1.7.1         |
-| OpenTelemetry.Instrumentation.EntityFrameworkCore.EntityFrameworkInstrumentationOptions   | OpenTelemetry.Instrumentation.EntityFrameworkCore | 1.0.0-beta.10 |
-| OpenTelemetry.Instrumentation.GrpcNetClient.GrpcClientTraceInstrumentationOptions         | OpenTelemetry.Instrumentation.GrpcNetClient       | 1.7.0-beta.1  |
-| OpenTelemetry.Instrumentation.Http.HttpClientTraceInstrumentationOptions                  | OpenTelemetry.Instrumentation.Http                | 1.7.1         |
-| OpenTelemetry.Instrumentation.Quartz.QuartzInstrumentationOptions                         | OpenTelemetry.Instrumentation.Quartz              | 1.0.0-beta.1  |
-| OpenTelemetry.Instrumentation.SqlClient.SqlClientTraceInstrumentationOptions              | OpenTelemetry.Instrumentation.SqlClient           | 1.7.0-beta.1  |
-| OpenTelemetry.Instrumentation.StackExchangeRedis.StackExchangeRedisInstrumentationOptions | OpenTelemetry.Instrumentation.StackExchangeRedis  | 1.0.0-rc9.13  |
-| OpenTelemetry.Instrumentation.Wcf.WcfInstrumentationOptions                               | OpenTelemetry.Instrumentation.Wcf                 | 1.0.0-rc.15   |
+| OpenTelemetry.Exporter.ConsoleExporterOptions                                             | OpenTelemetry.Exporter.Console                    | 1.8.0         |
+| OpenTelemetry.Exporter.ZipkinExporterOptions                                              | OpenTelemetry.Exporter.Zipkin                     | 1.8.0         |
+| OpenTelemetry.Exporter.OtlpExporterOptions                                                | OpenTelemetry.Exporter.OpenTelemetryProtocol      | 1.8.0         |
+| OpenTelemetry.Instrumentation.AspNet.AspNetTraceInstrumentationOptions                    | OpenTelemetry.Instrumentation.AspNet              | 1.8.0-beta.1  |
+| OpenTelemetry.Instrumentation.AspNetCore.AspNetCoreTraceInstrumentationOptions            | OpenTelemetry.Instrumentation.AspNetCore          | 1.8.0         |
+| OpenTelemetry.Instrumentation.EntityFrameworkCore.EntityFrameworkInstrumentationOptions   | OpenTelemetry.Instrumentation.EntityFrameworkCore | 1.0.0-beta.11 |
+| OpenTelemetry.Instrumentation.GrpcNetClient.GrpcClientTraceInstrumentationOptions         | OpenTelemetry.Instrumentation.GrpcNetClient       | 1.8.0-beta.1  |
+| OpenTelemetry.Instrumentation.Http.HttpClientTraceInstrumentationOptions                  | OpenTelemetry.Instrumentation.Http                | 1.8.0         |
+| OpenTelemetry.Instrumentation.Quartz.QuartzInstrumentationOptions                         | OpenTelemetry.Instrumentation.Quartz              | 1.0.0-beta.2  |
+| OpenTelemetry.Instrumentation.SqlClient.SqlClientTraceInstrumentationOptions              | OpenTelemetry.Instrumentation.SqlClient           | 1.8.0-beta.1  |
+| OpenTelemetry.Instrumentation.StackExchangeRedis.StackExchangeRedisInstrumentationOptions | OpenTelemetry.Instrumentation.StackExchangeRedis  | 1.0.0-rc9.14  |
+| OpenTelemetry.Instrumentation.Wcf.WcfInstrumentationOptions                               | OpenTelemetry.Instrumentation.Wcf                 | 1.0.0-rc.16   |
 
 ### Metrics
 
 | Options type                                                             | NuGet package                                  | NuGet version |
 |--------------------------------------------------------------------------|------------------------------------------------|---------------|
-| OpenTelemetry.Metrics.MetricReaderOptions                                | OpenTelemetry                                  | 1.7.0         |
-| OpenTelemetry.Exporter.ConsoleExporterOptions                            | OpenTelemetry.Exporter.Console                 | 1.7.0         |
-| OpenTelemetry.Exporter.PrometheusExporterOptions                         | OpenTelemetry.Exporter.Prometheus.HttpListener | 1.7.0-rc.1    |
-| OpenTelemetry.Exporter.OtlpExporterOptions                               | OpenTelemetry.Exporter.OpenTelemetryProtocol   | 1.7.0         |
-| OpenTelemetry.Instrumentation.AspNet.AspNetMetricsInstrumentationOptions | OpenTelemetry.Instrumentation.AspNet           | 1.7.0-beta.1  |
-| OpenTelemetry.Instrumentation.Runtime.RuntimeInstrumentationOptions      | OpenTelemetry.Instrumentation.Runtime          | 1.7.0         |
+| OpenTelemetry.Metrics.MetricReaderOptions                                | OpenTelemetry                                  | 1.8.0         |
+| OpenTelemetry.Exporter.ConsoleExporterOptions                            | OpenTelemetry.Exporter.Console                 | 1.8.0         |
+| OpenTelemetry.Exporter.PrometheusExporterOptions                         | OpenTelemetry.Exporter.Prometheus.HttpListener | 1.8.0-rc.1    |
+| OpenTelemetry.Exporter.OtlpExporterOptions                               | OpenTelemetry.Exporter.OpenTelemetryProtocol   | 1.8.0         |
+| OpenTelemetry.Instrumentation.AspNet.AspNetMetricsInstrumentationOptions | OpenTelemetry.Instrumentation.AspNet           | 1.8.0-beta.1  |
+| OpenTelemetry.Instrumentation.Runtime.RuntimeInstrumentationOptions      | OpenTelemetry.Instrumentation.Runtime          | 1.8.0         |
 
 ### Logs
 
 | Options type                                  | NuGet package                                | NuGet version |
 |-----------------------------------------------|----------------------------------------------|---------------|
-| OpenTelemetry.Logs.OpenTelemetryLoggerOptions | OpenTelemetry                                | 1.7.0         |
-| OpenTelemetry.Exporter.ConsoleExporterOptions | OpenTelemetry.Exporter.Console               | 1.7.0         |
-| OpenTelemetry.Exporter.OtlpExporterOptions    | OpenTelemetry.Exporter.OpenTelemetryProtocol | 1.7.0         |
+| OpenTelemetry.Logs.OpenTelemetryLoggerOptions | OpenTelemetry                                | 1.8.0         |
+| OpenTelemetry.Exporter.ConsoleExporterOptions | OpenTelemetry.Exporter.Console               | 1.8.0         |
+| OpenTelemetry.Exporter.OtlpExporterOptions    | OpenTelemetry.Exporter.OpenTelemetryProtocol | 1.8.0         |
 
 ## 參考資料
 
