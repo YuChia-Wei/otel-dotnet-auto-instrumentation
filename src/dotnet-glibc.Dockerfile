@@ -1,4 +1,4 @@
-ARG dotnetVersion=7.0
+ARG dotnetVersion=8.0
 ARG BaseImageTag=${dotnetVersion}
 
 FROM mcr.microsoft.com/dotnet/aspnet:${BaseImageTag} AS base
@@ -15,7 +15,7 @@ RUN cp /otel-dotnet-auto/linux-x64/OpenTelemetry.AutoInstrumentation.Native.so /
 # Build Plugin
 # FROM mcr.microsoft.com/dotnet/sdk:${dotnetVersion} AS build
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-ARG dotnetVersion=7.0
+ARG dotnetVersion=8.0
 WORKDIR /src
 COPY ["OpenTelemetry.AutoInstrumentation.AspNetCore.Plugins/OpenTelemetry.AutoInstrumentation.AspNetCore.Plugins.csproj", "OpenTelemetry.AutoInstrumentation.AspNetCore.Plugins/"]
 RUN dotnet restore "OpenTelemetry.AutoInstrumentation.AspNetCore.Plugins/OpenTelemetry.AutoInstrumentation.AspNetCore.Plugins.csproj"
@@ -24,7 +24,7 @@ WORKDIR "/src/OpenTelemetry.AutoInstrumentation.AspNetCore.Plugins"
 RUN dotnet build "OpenTelemetry.AutoInstrumentation.AspNetCore.Plugins.csproj" -c Release -o /app/build -f net${dotnetVersion}
 
 FROM build AS publish
-ARG dotnetVersion=7.0
+ARG dotnetVersion=8.0
 RUN dotnet publish "OpenTelemetry.AutoInstrumentation.AspNetCore.Plugins.csproj" -c Release -o /app/publish -f net${dotnetVersion}
 
 FROM base AS final
