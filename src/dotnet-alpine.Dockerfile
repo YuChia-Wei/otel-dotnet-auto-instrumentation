@@ -1,4 +1,4 @@
-ARG dotnetVersion=8.0
+ARG dotnetVersion=9.0
 
 FROM mcr.microsoft.com/dotnet/aspnet:${dotnetVersion}-alpine AS base
 
@@ -13,8 +13,8 @@ RUN cp /otel-dotnet-auto/linux-musl-x64/OpenTelemetry.AutoInstrumentation.Native
 
 # Build Plugin
 # FROM mcr.microsoft.com/dotnet/sdk:${dotnetVersion}-alpine AS build
-FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine AS build
-ARG dotnetVersion=8.0
+FROM mcr.microsoft.com/dotnet/sdk:9.0-alpine AS build
+ARG dotnetVersion=9.0
 WORKDIR /src
 COPY ["OpenTelemetry.AutoInstrumentation.AspNetCore.Plugins/OpenTelemetry.AutoInstrumentation.AspNetCore.Plugins.csproj", "OpenTelemetry.AutoInstrumentation.AspNetCore.Plugins/"]
 RUN dotnet restore "OpenTelemetry.AutoInstrumentation.AspNetCore.Plugins/OpenTelemetry.AutoInstrumentation.AspNetCore.Plugins.csproj"
@@ -23,7 +23,7 @@ WORKDIR "/src/OpenTelemetry.AutoInstrumentation.AspNetCore.Plugins"
 RUN dotnet build "OpenTelemetry.AutoInstrumentation.AspNetCore.Plugins.csproj" -c Release -o /app/build -f net${dotnetVersion}
 
 FROM build AS publish
-ARG dotnetVersion=8.0
+ARG dotnetVersion=9.0
 RUN dotnet publish "OpenTelemetry.AutoInstrumentation.AspNetCore.Plugins.csproj" -c Release -o /app/publish -f net${dotnetVersion}
 
 FROM base AS final
