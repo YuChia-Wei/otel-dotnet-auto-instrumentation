@@ -3,15 +3,16 @@
     <PropertyGroup>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <TargetFrameworks>net6.0;net8.0</TargetFrameworks>
+        <TargetFrameworks>net6.0;net8.0;net9.0</TargetFrameworks>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="OpenTelemetry" Version="1.9.0" />
-        <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.9.0" />
-        <!--        <PackageReference Include="OpenTelemetry.Instrumentation.EntityFrameworkCore" Version="1.0.0-beta.11" />-->
-        <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.9.0" />
-        <PackageReference Include="OpenTelemetry.Instrumentation.SqlClient" Version="1.9.0-beta.1" />
+        <PackageReference Include="Microsoft.AspNetCore.Diagnostics" Version="2.3.0" />
+        <PackageReference Include="OpenTelemetry" Version="1.11.1" />
+        <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.11.0" />
+        <!--        <PackageReference Include="OpenTelemetry.Instrumentation.EntityFrameworkCore" Version="1.1.0-beta.1" />-->
+        <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.11.0" />
+        <PackageReference Include="OpenTelemetry.Instrumentation.SqlClient" Version="1.11.0-beta.1" />
     </ItemGroup>
     
 </Project>

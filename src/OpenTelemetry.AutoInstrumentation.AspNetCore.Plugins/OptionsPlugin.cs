@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Hosting;
+using Microsoft.Net.Http.Headers;
 using OpenTelemetry.Instrumentation.AspNetCore;
 using OpenTelemetry.Instrumentation.Http;
 using OpenTelemetry.Instrumentation.SqlClient;
@@ -55,7 +56,7 @@ public class OptionsPlugin
     public void ConfigureTracesOptions(AspNetCoreTraceInstrumentationOptions options)
     {
         options.RecordException = true;
-        options.Filter = context => HttpRequestUserAgentChecker.IsValidUser(context.Request.Headers.UserAgent);
+        options.Filter = context => HttpRequestUserAgentChecker.IsValidUser(context.Request.Headers[HeaderNames.UserAgent]);
 
         // via. https://github.com/open-telemetry/opentelemetry-dotnet/tree/main/src/OpenTelemetry.Instrumentation.AspNetCore#enrich
         options.EnrichWithHttpRequest = ActivitySourceExtenstion.EnrichHttpRequest();

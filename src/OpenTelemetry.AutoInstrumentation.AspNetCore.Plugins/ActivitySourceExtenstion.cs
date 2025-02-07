@@ -1,28 +1,12 @@
 ﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
-using OpenTelemetry.Trace;
+using Microsoft.Net.Http.Headers;
 
 namespace OpenTelemetry.AutoInstrumentation.AspNetCore.Plugins;
 
 public static class ActivitySourceExtenstion
 {
-    public static Action<Activity, HttpResponse> EnrichHttpResponse()
-    {
-        return (activity, response) =>
-        {
-            var exceptionHandlerPathFeature = response.HttpContext.Features.Get<IExceptionHandlerPathFeature>();
-            if (exceptionHandlerPathFeature == null)
-            {
-                return;
-            }
-
-            var exception = exceptionHandlerPathFeature.Error;
-            activity.SetStatus(ActivityStatusCode.Error, exception.Message);
-            activity.RecordException(exception);
-        };
-    }
-
     public static Action<Activity, HttpRequest> EnrichHttpRequest()
     {
         return (activity, request) =>
@@ -46,6 +30,22 @@ public static class ActivitySourceExtenstion
             }
 
             activity.SetTag("http.client.ip", clientIp);
+        };
+    }
+
+    public static Action<Activity, HttpResponse> EnrichHttpResponse()
+    {
+        return (activity, response) =>
+        {
+            var exceptionHandlerPathFeature = response.HttpContext.Features.Get<IExceptionHandlerPathFeature>();
+            if (exceptionHandlerPathFeature == null)
+            {
+                return;
+            }
+
+            var exception = exceptionHandlerPathFeature.Error;
+            activity.SetStatus(ActivityStatusCode.Error, exception.Message);
+            activity.AddException(exception);
         };
     }
 }
