@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Text.RegularExpressions;
 
 namespace OpenTelemetry.AutoInstrumentation.AspNetCore.Plugins;
 
@@ -19,8 +20,10 @@ public static class HttpRequestUserAgentChecker
     /// </summary>
     /// <param name="input"></param>
     /// <returns></returns>
+    /// <remarks>因為要支援多版 dotnet，因此先忽略舊版無法使用的 SYSLIB1045 提醒</remarks>
+    [SuppressMessage("Performance", "SYSLIB1045:轉換為 \'GeneratedRegexAttribute\'。")]
     private static bool IsNotA10OrK8S(string input)
     {
-        return !Regex.IsMatch(input, "^a10hm/\\d+.\\d+|^kube-probe/\\d+.\\d+", RegexOptions.IgnoreCase);
+        return !Regex.IsMatch(input, @"^a10hm/\d+.\d+|^kube-probe/\d+.\d+", RegexOptions.IgnoreCase);
     }
 }

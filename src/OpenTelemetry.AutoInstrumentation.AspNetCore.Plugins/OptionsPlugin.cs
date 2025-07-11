@@ -39,7 +39,7 @@ public class OptionsPlugin
         //取得服務執行時設定的環境參數，理論上會存在，除非服務自己把它刪掉
         var aspNetCoreEnv = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? Environments.Production;
 
-        builder.AddAttributes(new KeyValuePair<string, object>[]
+        builder.AddAttributes(new List<KeyValuePair<string, object>>
         {
             new("host.name", nodeName ?? Environment.MachineName),
             new("container.name", Environment.MachineName),

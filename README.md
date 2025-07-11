@@ -4,7 +4,9 @@ OpenTelemetry .NET Automatic Instrumentation
 source: [opentelemetry-dotnet-instrumentation](https://github.com/open-telemetry/opentelemetry-dotnet-instrumentation)
 
 :::waring
+
 I'm stop publish the \.net 7 version image, You can fork this repo and build it by you self If you need.
+
 :::
 
 ## current version
