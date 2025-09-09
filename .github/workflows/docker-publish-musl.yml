@@ -7,8 +7,8 @@ name: docker-publish-musl
 
 on:
   schedule:
-    # Run every week on Monday at 00:00 UTC
-    - cron: '0 0 * * 1'
+    # Run every month on Monday at 00:00 UTC
+    - cron: '0 0 1 * *'
   # push:
   #   branches: [ "main" ]
   #   # Publish semver tags as releases.
