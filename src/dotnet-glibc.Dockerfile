@@ -1,6 +1,7 @@
-ARG dotnetVersion=9.0
+ARG dotnetVersion=10.0
 ARG BaseImageTag=${dotnetVersion}
 
+# runtime base image
 FROM mcr.microsoft.com/dotnet/aspnet:${BaseImageTag} AS base
 
 # 處理 open telemetry dotnet auto instrumentation 套件
@@ -9,13 +10,13 @@ FROM mcr.microsoft.com/dotnet/aspnet:${BaseImageTag} AS base
 FROM base AS otel
 COPY otel.dotnet.AutoInstrumentation.Release/opentelemetry-dotnet-instrumentation-linux-glibc.tar.gz otel-dotnet-instrumentation.tar.gz
 RUN tar -xzvf otel-dotnet-instrumentation.tar.gz && mv opentelemetry-dotnet-instrumentation-linux-glibc otel-dotnet-auto
-#複製必要資料到 0.5.0 版時，此檔案的原始位置，這樣就不用調整舊版部署檔的參數路徑，也可以避免服務更換基底容器時還要異動部署設定的問題
-RUN cp /otel-dotnet-auto/linux-x64/OpenTelemetry.AutoInstrumentation.Native.so /otel-dotnet-auto/OpenTelemetry.AutoInstrumentation.Native.so
+
+# memo: 這邊建置使用 10.0-alpine 僅是為了降低建置機的硬碟使用
 
 # Build Plugin
 # FROM mcr.microsoft.com/dotnet/sdk:${dotnetVersion} AS build
-FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
-ARG dotnetVersion=9.0
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
+ARG dotnetVersion=10.0
 WORKDIR /src
 COPY ["OpenTelemetry.AutoInstrumentation.AspNetCore.Plugins/OpenTelemetry.AutoInstrumentation.AspNetCore.Plugins.csproj", "OpenTelemetry.AutoInstrumentation.AspNetCore.Plugins/"]
 RUN dotnet restore "OpenTelemetry.AutoInstrumentation.AspNetCore.Plugins/OpenTelemetry.AutoInstrumentation.AspNetCore.Plugins.csproj"
@@ -24,7 +25,7 @@ WORKDIR "/src/OpenTelemetry.AutoInstrumentation.AspNetCore.Plugins"
 RUN dotnet build "OpenTelemetry.AutoInstrumentation.AspNetCore.Plugins.csproj" -c Release -o /app/build -f net${dotnetVersion}
 
 FROM build AS publish
-ARG dotnetVersion=9.0
+ARG dotnetVersion=10.0
 RUN dotnet publish "OpenTelemetry.AutoInstrumentation.AspNetCore.Plugins.csproj" -c Release -o /app/publish -f net${dotnetVersion}
 
 FROM base AS final
