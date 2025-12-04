@@ -41,16 +41,17 @@ I will only publish base containers for dotnet 8, 10.
 
 ### published images
 
-| image name                                                              | dotnet version | OS version                  | image size |
-|-------------------------------------------------------------------------|----------------|-----------------------------|------------|
-| ghcr.io/yuchia-wei/otel-dotnet-auto-instrumentation:8.0                 | 8.0            | Debian 12 bookworm-slim     | 210–230 MB |
-| ghcr.io/yuchia-wei/otel-dotnet-auto-instrumentation:8.0-bookworm-slim   | 8.0            | Debian 12 bookworm-slim     | 210–230 MB |
-| ghcr.io/yuchia-wei/otel-dotnet-auto-instrumentation:8.0-alpine          | 8.0            | Alpine 3.18/3.19 (musl)     | 90–110 MB  |
-|                                                                         |                |                             |            |
-| ghcr.io/yuchia-wei/otel-dotnet-auto-instrumentation:10.0                | 10.0           | Ubuntu 24.04 Noble (full)   | 220–250 MB |
-| ghcr.io/yuchia-wei/otel-dotnet-auto-instrumentation:10.0-noble          | 10.0           | Ubuntu 24.04 Noble (full)   | 220–250 MB |
-| ghcr.io/yuchia-wei/otel-dotnet-auto-instrumentation:10.0-noble-chiseled | 10.0           | Ubuntu 24.04 Noble Chiseled | 100–130 MB |
-| ghcr.io/yuchia-wei/otel-dotnet-auto-instrumentation:10.0-alpine         | 10.0           | Alpine 3.2x (musl)          | 90–110 MB  |
+| image name                                                              | dotnet version | OS version                  |
+|-------------------------------------------------------------------------|----------------|-----------------------------|
+| ghcr.io/yuchia-wei/otel-dotnet-auto-instrumentation:8.0                 | 8.0            | Debian 12 bookworm-slim     |
+| ghcr.io/yuchia-wei/otel-dotnet-auto-instrumentation:8.0-noble           | 8.0            | Ubuntu 24.04 Noble (full)   |
+| ghcr.io/yuchia-wei/otel-dotnet-auto-instrumentation:8.0-noble-chiseled  | 8.0            | Ubuntu 24.04 Noble Chiseled |
+| ghcr.io/yuchia-wei/otel-dotnet-auto-instrumentation:8.0-alpine          | 8.0            | Alpine 3.18/3.19 (musl)     |
+|                                                                         |                |                             |
+| ghcr.io/yuchia-wei/otel-dotnet-auto-instrumentation:10.0                | 10.0           | Ubuntu 24.04 Noble (full)   |
+| ghcr.io/yuchia-wei/otel-dotnet-auto-instrumentation:10.0-noble          | 10.0           | Ubuntu 24.04 Noble (full)   |
+| ghcr.io/yuchia-wei/otel-dotnet-auto-instrumentation:10.0-noble-chiseled | 10.0           | Ubuntu 24.04 Noble Chiseled |
+| ghcr.io/yuchia-wei/otel-dotnet-auto-instrumentation:10.0-alpine         | 10.0           | Alpine 3.2x (musl)          |
 
 ## 執行時需要的環境參數
 
