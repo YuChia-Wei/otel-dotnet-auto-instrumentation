@@ -10,8 +10,6 @@ FROM base AS otel
 COPY otel.dotnet.AutoInstrumentation.Release/opentelemetry-dotnet-instrumentation-linux-musl.tar.gz otel-dotnet-instrumentation.tar.gz
 RUN tar -xzvf otel-dotnet-instrumentation.tar.gz && mv opentelemetry-dotnet-instrumentation-linux-musl otel-dotnet-auto
 
-# memo: 這邊建置使用 10.0-alpine 僅是為了降低建置機的硬碟使用
-
 # Build Plugin
 # FROM mcr.microsoft.com/dotnet/sdk:${dotnetVersion}-alpine AS build
 FROM mcr.microsoft.com/dotnet/sdk:10.0-alpine AS build
