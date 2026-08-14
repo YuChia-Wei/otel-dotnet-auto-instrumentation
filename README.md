@@ -1,3 +1,5 @@
+
+
 # OpenTelemetry .NET Automatic Instrumentation Image
 
 ## Introduction
@@ -121,7 +123,7 @@ OpenTelemetry .NET Automatic Instrumentation 有提供掛載外掛，可以修�
 ### 開發須知
 
 1. 必須是非靜態、非抽象的類別
-2. 必須要有 `public void initializing()` 方法
+2. 必須要有 `public void Initializing()` 方法
 3. Plugin 內參考的 nuget 套件版本必須和 OpenTelemetry .NET Automatic Instrumentation 用的一樣
 4. plugin 開發時需要考慮使用的 OpenTelemetry .NET Automatic Instrumentation 版本，避免 breaking change
 5. 替套件寫單元測試
