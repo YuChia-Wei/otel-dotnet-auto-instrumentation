@@ -1,0 +1,18 @@
+{
+  "version": "1.17.0",
+  "release_url": "https://github.com/open-telemetry/opentelemetry-dotnet-instrumentation/releases/tag/v1.17.0",
+  "assets": [
+    {
+      "source_url": "https://github.com/open-telemetry/opentelemetry-dotnet-instrumentation/releases/download/v1.17.0/opentelemetry-dotnet-instrumentation-linux-glibc-x64.zip",
+      "source_sha256": "cc56878f0155e28b6554924fbd420fcb8bec7108cd9d41836dc530764ac923f8",
+      "archive": "opentelemetry-dotnet-instrumentation-linux-glibc.tar.gz",
+      "archive_sha256": "acfcdbee4d3790937e7b8aab17f9a1ad5cbcba6fdc1772814a152dd52a7405f0"
+    },
+    {
+      "source_url": "https://github.com/open-telemetry/opentelemetry-dotnet-instrumentation/releases/download/v1.17.0/opentelemetry-dotnet-instrumentation-linux-musl-x64.zip",
+      "source_sha256": "36eb55ce2f7a9da8ffd70ccbd97761a1917d7f57709f1a6ca9e7029dfa120516",
+      "archive": "opentelemetry-dotnet-instrumentation-linux-musl.tar.gz",
+      "archive_sha256": "078c18d26d2f8293799f5a30fc4501f97837f4b8f88d3ea85f7d8d48766547d0"
+    }
+  ]
+}

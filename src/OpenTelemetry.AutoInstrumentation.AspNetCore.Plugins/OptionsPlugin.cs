@@ -1,15 +1,35 @@
 using Microsoft.Extensions.Hosting;
 using Microsoft.Net.Http.Headers;
+using OpenTelemetry.AutoInstrumentation.PluginApi;
+using OpenTelemetry.AutoInstrumentation.PluginApi.Telemetry;
 using OpenTelemetry.Instrumentation.AspNetCore;
 using OpenTelemetry.Instrumentation.Http;
 using OpenTelemetry.Instrumentation.SqlClient;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 
 namespace OpenTelemetry.AutoInstrumentation.AspNetCore.Plugins;
 
-public class OptionsPlugin
+public class OptionsPlugin : IPlugin, ITelemetryPlugin,
+    IConfigureTracesOptions<AspNetCoreTraceInstrumentationOptions>,
+    IConfigureTracesOptions<HttpClientTraceInstrumentationOptions>,
+    IConfigureTracesOptions<SqlClientTraceInstrumentationOptions>
 {
+    public TracerProviderBuilder BeforeConfigureTracerProvider(TracerProviderBuilder builder) => builder;
+
+    public TracerProviderBuilder AfterConfigureTracerProvider(TracerProviderBuilder builder) => builder;
+
+    public MeterProviderBuilder BeforeConfigureMeterProvider(MeterProviderBuilder builder) => builder;
+
+    public void TracerProviderInitialized(TracerProvider tracerProvider)
+    {
+    }
+
+    public void MeterProviderInitialized(MeterProvider meterProvider)
+    {
+    }
+
     // To configure metrics SDK after Auto Instrumentation configured SDK
     public MeterProviderBuilder AfterConfigureMeterProvider(MeterProviderBuilder builder)
     {
@@ -83,7 +103,7 @@ public class OptionsPlugin
     }
 
     /// <summary>
-    /// should be rename to ConfigureTracesOptions when OpenTelemetry.DotNet.Instrumentation upgrade to ^0.5.1
+    /// SqlClient 追蹤
     /// </summary>
     /// <param name="options"></param>
     public void ConfigureTracesOptions(SqlClientTraceInstrumentationOptions options)
@@ -95,6 +115,10 @@ public class OptionsPlugin
     /// To configure plugin, before OTel SDK configuration is called.
     /// </summary>
     public void Initializing()
+    {
+    }
+
+    public void Initialized()
     {
     }
 }
