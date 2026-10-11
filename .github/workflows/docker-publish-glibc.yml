@@ -6,6 +6,7 @@ name: docker-publish-glibc
 # documentation.
 
 on:
+  workflow_dispatch:
   schedule:
     # Run every month on Monday at 00:00 UTC
     - cron: '0 0 1 * *'
